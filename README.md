@@ -1,2 +1,2 @@
-# unity3d-cube-renderer
-a custom made cube renderer in unity3d
+# chat-application
+a prototype for a chat app created using multithreading and sockets in python
