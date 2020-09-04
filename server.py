@@ -22,33 +22,36 @@ def handle_client(client,addr):
     disconnected_message = "DISCONNECTED_FROM_CHAT_APP"
     byte = 1024
 
-    while connected:
-        message_len = client.recv(byte).decode("utf-8")
+    try:
+        while connected:
+            message_len = client.recv(byte).decode("utf-8")
 
-        if message_len != None:
+            if message_len != None:
 
-            # receiving message from the client
-            message_len = int(message_len)
-            message = client.recv(message_len).decode("utf-8")
+                # receiving message from the client
+                message_len = int(message_len)
+                message = client.recv(message_len).decode("utf-8")
 
-            if message == disconnected_message:
-                print("disconnected")
-                connected = False
-                break
-            else:
-                print("[" + str(addr) + "]: " + message)
+                if message == disconnected_message:
+                    print("disconnected")
+                    connected = False
+                    break
+                else:
+                    print("[" + str(addr) + "]: " + message)
+                    client.send("\n[MESSAGE SENT]\n")
 
-                # sending a client message to other clients
-                with clients_lock:
-                    for c in clients:
+                    # sending a client message to other clients
+                    with clients_lock:
+                        for c in clients:
 
-                        if (c != client):
-                            c.sendall(message+"\n")
-                            print("sent")
-    # removing clients
-    with clients_lock:
-        clients.remove(client)
-        client.close()
+                            if (c != client):
+                                c.sendall("[MESSAGE RECEIVED]: ["+str(addr)+"]: " + message + "\n")
+                                print("sent")
+    except:
+        # removing clients
+        with clients_lock:
+            clients.remove(client)
+            client.close()
 
 # accepting clients
 def start_server():
