@@ -24,14 +24,10 @@ def send_message(message):
 
     client.send(send_len)
     client.send(msg)
+    return
 
-    print(client.recv(2048).decode("utf-8")) # receiving messages from the server
-    get_input()
-
-
-# getting input
-def get_input():
-    msg = input()
+while 1:
+    msg = input("[YOU]: ")
     send_message(msg)
 
-get_input()
+    print(client.recv(2048).decode("utf-8"))
